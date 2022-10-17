@@ -313,3 +313,144 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+#### `GET /api/users/:username?/profile` - Get profile page of user
+
+**Returns**
+
+- An object containing info about the user and their profile page details.
+
+**Throws**
+
+- `404` if the username does not exist
+
+#### `PUT /api/users/:username?/profile` - Update user profile page
+
+**Returns**
+
+- A success message
+- An object with the user's new profile page details
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the username is not associated with the logged in user
+
+#### `GET /api/users/:username?/followers` - Get followers of user
+
+**Returns**
+
+- An array of Users that follow a specific User.
+
+**Throws**
+
+- `404` if the username does not exist
+
+#### `GET /api/users/:username?/following` - Get following of user
+
+**Returns**
+
+- An array of Users that are followed by a specific User.
+
+**Throws**
+
+- `404` if the username does not exist
+
+#### `POST /api/users/follow/:followee?` - Adds follower user to follow followee
+
+**Returns**
+
+- A success message
+- An object with the update user details (without password)
+
+**Throws**
+
+- `403` if the follower user is not logged in
+- `404` if the followee username does not exist
+- `409` if follower is already following followee
+
+#### `DELETE /api/users/follow/:followee?` - Removes follower user to unfollow followee
+
+**Returns**
+
+- A success message
+- An object with the update user details
+
+**Throws**
+
+- `403` if the follower user is not logged in
+- `404` if the followee username does not exist
+- `409` if follower is not already following followee
+
+#### `POST /api/bookmark/:bundle?/:freetId?` - Add freet to Bookmark Bundle
+
+**Returns**
+
+- A success message
+- An object with the updated Bookmark Bundle
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+- `404` if the freet is private to user
+- `409` if freet is already in bundle
+
+#### `DELETE /api/bookmark/:bundle?/:freetId?` - Remove freet from Bookmark Bundle
+
+**Returns**
+
+- A success message
+- An object with the updated Bookmark Bundle
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+- `404` if the bundle is invalid
+
+#### `GET /api/freets?startdate=DATE` - Get all the freets after date
+
+**Returns**
+
+- An array of all freets created after startdate
+
+#### `GET /api/freets?enddate=DATE` - Get all the freets before date
+
+**Returns**
+
+- An array of all freets created before enddate
+
+#### `GET /api/freets?media=MEDIA` - Get all the freets before date
+
+**Returns**
+
+- An array of all freets created that include media (photo, video, etc.)
+
+#### `POST /api/pdownvote/:freetId?` - Personal downvote freet
+
+**Returns**
+
+- A success message
+- An object with the updated downvote stats for the user
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+- `404` if the freet is private to user
+- `409` if freet has already been personally downvoted
+
+#### `DELETE /api/pdownvote/:freetId?` - Personal downvote freet
+
+**Returns**
+
+- A success message
+- An object with the updated downvote stats for the user
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+- `404` if the freet is private to user
+- `409` if freet has not already been personally downvoted
