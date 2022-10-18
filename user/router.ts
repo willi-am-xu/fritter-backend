@@ -135,7 +135,10 @@ router.put(
 router.delete(
   '/',
   [
-    userValidator.isUserLoggedIn
+    userValidator.isUserLoggedIn,
+    userValidator.isValidUsername,
+    userValidator.isUsernameNotAlreadyInUse,
+    userValidator.isValidPassword
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
@@ -149,3 +152,32 @@ router.delete(
 );
 
 export {router as userRouter};
+
+
+/**
+ * Follow another user.
+ *
+ * @name POST /api/users/follow/:followee?
+ *
+ * @param {string} username - The user's new username
+ * @param {string} password - The user's new password
+ * @return {UserResponse} - The created user
+ * @throws {403} - If user is not logged in
+ * @throws {409} - If user is already following
+ * @throws {404} - If followee does not exist
+ *
+ */
+ router.post(
+  '/',
+  [
+    userValidator.isUserLoggedOut
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const user = await UserCollection.updateOne(userId, req.body);
+    res.status(200).json({
+      message: 'Your profile was updated successfully.',
+      user: util.constructUserResponse(user)
+    });
+  }
+);

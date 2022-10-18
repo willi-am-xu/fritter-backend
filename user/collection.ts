@@ -21,7 +21,7 @@ class UserCollection {
   static async addOne(username: string, password: string): Promise<HydratedDocument<User>> {
     const dateJoined = new Date();
 
-    const user = new UserModel({username, password, dateJoined});
+    const user = new UserModel({username, password, dateJoined, followers:[], following:[]});
     await user.save(); // Saves user to MongoDB
     return user;
   }
@@ -69,12 +69,20 @@ class UserCollection {
    */
   static async updateOne(userId: Types.ObjectId | string, userDetails: any): Promise<HydratedDocument<User>> {
     const user = await UserModel.findOne({_id: userId});
+    console.log(userDetails)
     if (userDetails.password) {
       user.password = userDetails.password as string;
     }
 
     if (userDetails.username) {
       user.username = userDetails.username as string;
+    }
+    if (userDetails.followee) {
+      console.log('aweljak');
+      const followee = await UserModel.findOne({username: userDetails.followee});
+      followee.followers.push(user);
+      user.following.push(followee);
+      await followee.save();
     }
 
     await user.save();
