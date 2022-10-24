@@ -153,6 +153,52 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
+const isFolloweeExists = async (req: Request, res: Response, next: NextFunction) => {
+  const followee = req.params.followee;
+
+  if (!followee) {
+    res.status(400).json({error: `Missing followee username.`});
+    return;
+  }
+
+  const user = await UserCollection.findOneByUsername(
+    followee
+  );
+
+  if (user) {
+    next();
+  } else {
+    res.status(401).json({error: 'Invalid followee username provided.'});
+  }
+};
+
+
+const isAlreadyFollowing = async (req: Request, res: Response, next: NextFunction) => {
+  const followeeUser = await UserCollection.findOneByUsername(req.params.followee);
+  const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+  const user = await UserCollection.findOneByUserId(userId);
+
+  if (followeeUser.followers.includes(user.username)) {
+    res.status(409).json({
+      error: {
+        username: 'This username is already followed.'
+      }
+    });
+  }
+  else if (req.params.followee === user.username) {
+    res.status(409).json({
+      error: {
+        username: 'Cannot self-follow!'
+      }
+    });
+  }
+  else {
+    next();
+    return;
+  }
+};
+
+
 export {
   isCurrentSessionUserExists,
   isUserLoggedIn,
@@ -161,5 +207,7 @@ export {
   isAccountExists,
   isAuthorExists,
   isValidUsername,
-  isValidPassword
+  isValidPassword,
+  isFolloweeExists,
+  isAlreadyFollowing
 };

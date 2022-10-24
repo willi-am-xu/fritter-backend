@@ -157,7 +157,7 @@ export {router as userRouter};
 /**
  * Follow another user.
  *
- * @name POST /api/users/follow/:followee?
+ * @name PUT /api/users/follow/:followee?
  *
  * @param {string} username - The user's new username
  * @param {string} password - The user's new password
@@ -167,16 +167,18 @@ export {router as userRouter};
  * @throws {404} - If followee does not exist
  *
  */
- router.post(
-  '/',
+ router.put(
+  '/follow/:followee?',
   [
-    userValidator.isUserLoggedOut
+    userValidator.isUserLoggedIn,
+    userValidator.isFolloweeExists,
+    userValidator.isAlreadyFollowing
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const user = await UserCollection.updateOne(userId, req.body);
+    const user = await UserCollection.followOne(userId, req.params.followee);
     res.status(200).json({
-      message: 'Your profile was updated successfully.',
+      message: `Followed ${req.params.followee} successfully.`,
       user: util.constructUserResponse(user)
     });
   }

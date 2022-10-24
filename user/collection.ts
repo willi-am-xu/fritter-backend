@@ -69,7 +69,6 @@ class UserCollection {
    */
   static async updateOne(userId: Types.ObjectId | string, userDetails: any): Promise<HydratedDocument<User>> {
     const user = await UserModel.findOne({_id: userId});
-    console.log(userDetails)
     if (userDetails.password) {
       user.password = userDetails.password as string;
     }
@@ -77,14 +76,16 @@ class UserCollection {
     if (userDetails.username) {
       user.username = userDetails.username as string;
     }
-    if (userDetails.followee) {
-      console.log('aweljak');
-      const followee = await UserModel.findOne({username: userDetails.followee});
-      followee.followers.push(user);
-      user.following.push(followee);
-      await followee.save();
-    }
+    await user.save();
+    return user;
+  }
 
+  static async followOne(userId: Types.ObjectId | string, followeeUsername: string): Promise<HydratedDocument<User>> {
+    const user = await UserModel.findOne({_id: userId});
+    const followee = await UserModel.findOne({username: followeeUsername});
+    followee.followers.push(user.username);
+    user.following.push(followee.username);
+    await followee.save();
     await user.save();
     return user;
   }

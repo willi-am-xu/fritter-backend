@@ -12,8 +12,8 @@ export type User = {
   username: string;
   password: string;
   dateJoined: Date;
-  followers: Array<User>;
-  following: Array<User>;
+  followers: Array<string>;
+  following: Array<string>;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table

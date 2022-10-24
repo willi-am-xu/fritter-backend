@@ -40,8 +40,7 @@ function signOut() {
 }
 
 function followUser(fields) {
-  console.log(fields)
-  fetch('/api/users', {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+  fetch(`/api/users/follow/${fields.followee}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
     .catch(showResponse);
 }
