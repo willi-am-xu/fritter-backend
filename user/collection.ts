@@ -90,6 +90,16 @@ class UserCollection {
     return user;
   }
 
+  static async unfollowOne(userId: Types.ObjectId | string, followeeUsername: string): Promise<HydratedDocument<User>> {
+    const user = await UserModel.findOne({_id: userId});
+    const followee = await UserModel.findOne({username: followeeUsername});
+    followee.followers = followee.followers.filter((value) => {value !== user.username});
+    user.following = user.following.filter((value) => {value !== followee.username});
+    await followee.save();
+    await user.save();
+    return user;
+  }
+
   /**
    * Delete a user from the collection.
    *

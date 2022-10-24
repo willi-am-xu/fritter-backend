@@ -40,7 +40,13 @@ function signOut() {
 }
 
 function followUser(fields) {
-  fetch(`/api/users/follow/${fields.followee}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+  fetch(`/api/users/follow/${fields.followee}`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function unfollowUser(fields) {
+  fetch(`/api/users/follow/${fields.followee}`, {method: 'DELETE', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
     .catch(showResponse);
 }

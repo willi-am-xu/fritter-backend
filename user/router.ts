@@ -151,13 +151,10 @@ router.delete(
   }
 );
 
-export {router as userRouter};
-
-
 /**
  * Follow another user.
  *
- * @name PUT /api/users/follow/:followee?
+ * @name POST /api/users/follow/:followee?
  *
  * @param {string} username - The user's new username
  * @param {string} password - The user's new password
@@ -167,7 +164,7 @@ export {router as userRouter};
  * @throws {404} - If followee does not exist
  *
  */
- router.put(
+ router.post(
   '/follow/:followee?',
   [
     userValidator.isUserLoggedIn,
@@ -183,3 +180,35 @@ export {router as userRouter};
     });
   }
 );
+
+/**
+ * Follow another user.
+ *
+ * @name DELETE /api/users/follow/:followee?
+ *
+ * @param {string} username - The user's new username
+ * @param {string} password - The user's new password
+ * @return {UserResponse} - The created user
+ * @throws {403} - If user is not logged in
+ * @throws {409} - If user is already following
+ * @throws {404} - If followee does not exist
+ *
+ */
+ router.delete(
+  '/follow/:followee?',
+  [
+    userValidator.isUserLoggedIn,
+    userValidator.isFolloweeExists,
+    userValidator.isNotAlreadyFollowing
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const user = await UserCollection.unfollowOne(userId, req.params.followee);
+    res.status(200).json({
+      message: `Unfollowed ${req.params.followee} successfully.`,
+      user: util.constructUserResponse(user)
+    });
+  }
+);
+
+export {router as userRouter};

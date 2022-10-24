@@ -181,7 +181,7 @@ const isAlreadyFollowing = async (req: Request, res: Response, next: NextFunctio
   if (followeeUser.followers.includes(user.username)) {
     res.status(409).json({
       error: {
-        username: 'This username is already followed.'
+        username: 'This user is already followed.'
       }
     });
   }
@@ -198,6 +198,30 @@ const isAlreadyFollowing = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
+const isNotAlreadyFollowing = async (req: Request, res: Response, next: NextFunction) => {
+  const followeeUser = await UserCollection.findOneByUsername(req.params.followee);
+  const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+  const user = await UserCollection.findOneByUserId(userId);
+
+  if (!followeeUser.followers.includes(user.username)) {
+    res.status(409).json({
+      error: {
+        username: 'This user has not been followed.'
+      }
+    });
+  }
+  else if (req.params.followee === user.username) {
+    res.status(409).json({
+      error: {
+        username: 'Cannot self-unfollow!'
+      }
+    });
+  }
+  else {
+    next();
+    return;
+  }
+};
 
 export {
   isCurrentSessionUserExists,
@@ -209,5 +233,6 @@ export {
   isValidUsername,
   isValidPassword,
   isFolloweeExists,
-  isAlreadyFollowing
+  isAlreadyFollowing,
+  isNotAlreadyFollowing
 };
