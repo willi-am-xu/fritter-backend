@@ -59,6 +59,19 @@ const isValidPassword = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
+const isValidName = (req: Request, res: Response, next: NextFunction) => {
+  if (req.body.name.length === 0) {
+    res.status(400).json({
+      error: {
+        name: 'Name must be a nonempty string.'
+      }
+    });
+    return;
+  }
+
+  next();
+};
+
 /**
  * Checks if a user with username and password in req.body exists
  */
@@ -153,6 +166,25 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
+const isUserExists = async (req: Request, res: Response, next: NextFunction) => {
+  const username = req.params.username as string;
+
+  if (!username) {
+    res.status(400).json({error: `Username must be nonempty.`});
+    return;
+  }
+
+  const user = await UserCollection.findOneByUsername(
+    username
+  );
+
+  if (user) {
+    next();
+  } else {
+    res.status(401).json({error: 'No user was found with that username.'});
+  }
+};
+
 const isFolloweeExists = async (req: Request, res: Response, next: NextFunction) => {
   const followee = req.params.followee;
 
@@ -232,6 +264,8 @@ export {
   isAuthorExists,
   isValidUsername,
   isValidPassword,
+  isValidName,
+  isUserExists,
   isFolloweeExists,
   isAlreadyFollowing,
   isNotAlreadyFollowing

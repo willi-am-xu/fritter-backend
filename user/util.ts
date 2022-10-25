@@ -9,6 +9,9 @@ type UserResponse = {
   dateJoined: string;
   followers: Array<string>;
   following: Array<string>;
+  name: string;
+  bio: string;
+  picture: string;
 };
 
 /**

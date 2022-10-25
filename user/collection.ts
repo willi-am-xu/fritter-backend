@@ -18,10 +18,10 @@ class UserCollection {
    * @param {string} password - The password of the user
    * @return {Promise<HydratedDocument<User>>} - The newly created user
    */
-  static async addOne(username: string, password: string): Promise<HydratedDocument<User>> {
+  static async addOne(username: string, password: string, name: string): Promise<HydratedDocument<User>> {
     const dateJoined = new Date();
 
-    const user = new UserModel({username, password, dateJoined, followers:[], following:[]});
+    const user = new UserModel({username, password, dateJoined, followers:[], following:[], name: name});
     await user.save(); // Saves user to MongoDB
     return user;
   }
@@ -75,6 +75,18 @@ class UserCollection {
 
     if (userDetails.username) {
       user.username = userDetails.username as string;
+    }
+
+    if (userDetails.name) {
+      user.name = userDetails.name as string;
+    }
+
+    if (userDetails.bio) {
+      user.bio = userDetails.bio as string;
+    }
+
+    if (userDetails.picture) {
+      user.picture = userDetails.picture as string;
     }
     await user.save();
     return user;

@@ -32,6 +32,9 @@ const formsAndHandlers = {
   'delete-user': deleteUser,
   'change-username': changeUsername,
   'change-password': changePassword,
+  'change-name': changeName,
+  'change-bio': changeBio,
+  'change-picture': changePicture,
   'sign-in': signIn,
   'sign-out': signOut,
   'view-all-freets': viewAllFreets,
@@ -40,7 +43,8 @@ const formsAndHandlers = {
   'edit-freet': editFreet,
   'delete-freet': deleteFreet,
   'follow-user': followUser,
-  'unfollow-user': unfollowUser
+  'unfollow-user': unfollowUser,
+  'get-user-profile': getUserProfile
 };
 
 // Attach handlers to forms

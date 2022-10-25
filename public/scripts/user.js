@@ -21,6 +21,24 @@ function changePassword(fields) {
     .catch(showResponse);
 }
 
+function changeName(fields) {
+  fetch('/api/users/my/profile', {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function changeBio(fields) {
+  fetch('/api/users/my/profile', {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function changePicture(fields) {
+  fetch('/api/users/my/profile', {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
 function deleteUser(fields) {
   fetch('/api/users', {method: 'DELETE'})
     .then(showResponse)
@@ -46,7 +64,13 @@ function followUser(fields) {
 }
 
 function unfollowUser(fields) {
-  fetch(`/api/users/follow/${fields.followee}`, {method: 'DELETE', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+  fetch(`/api/users/follow/${fields.followee}`, {method: 'DELETE'})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function getUserProfile(fields) {
+  fetch(`/api/users/${fields.username}/profile`)
     .then(showResponse)
     .catch(showResponse);
 }
