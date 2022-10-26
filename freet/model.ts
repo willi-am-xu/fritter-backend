@@ -15,6 +15,9 @@ export type Freet = {
   content: string;
   dateModified: Date;
   media?: string;
+  likes: Array<Types.ObjectId>;
+  reFreets: Array<Types.ObjectId>;
+  personalDownvotes: Array<Types.ObjectId>;
 };
 
 export type PopulatedFreet = {
@@ -24,6 +27,9 @@ export type PopulatedFreet = {
   content: string;
   dateModified: Date;
   media?: string;
+  likes: Array<Types.ObjectId>;
+  reFreets: Array<Types.ObjectId>;
+  personalDownvotes: Array<Types.ObjectId>;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -54,7 +60,24 @@ const FreetSchema = new Schema<Freet>({
   },
   media: {
     type: String
-  }
+  },
+  likes: [{
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
+  }],
+  reFreets: [{
+    // Use Types.ObjectId outside of the schema
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
+  }],
+  personalDownvotes: [{
+    // Use Types.ObjectId outside of the schema
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
+  }],
 });
 
 const FreetModel = model<Freet>('Freet', FreetSchema);

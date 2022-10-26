@@ -167,4 +167,160 @@ router.put(
   }
 );
 
+/**
+ * Like a freet.
+ *
+ * @name POST /api/freets/:id/like
+ *
+ * @return {FreetResponse} - the updated freet
+ * @throws {403} - if the user is not logged in
+ * @throws {404} - If the freetId is not valid
+ */
+ router.post(
+  '/:freetId?/like',
+  [
+    userValidator.isUserLoggedIn,
+    freetValidator.isFreetExists,
+    freetValidator.isUnlikedFreet,
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freet = await FreetCollection.addOneLike(req.params.freetId, userId);
+    res.status(200).json({
+      message: 'The freet was liked successfully.',
+      freet: util.constructFreetResponse(freet)
+    });
+  }
+);
+
+/**
+ * Unlike a freet.
+ *
+ * @name DELETE /api/freets/:id/like
+ *
+ * @return {FreetResponse} - the updated freet
+ * @throws {403} - if the user is not logged in
+ * @throws {404} - If the freetId is not valid
+ */
+ router.delete(
+  '/:freetId?/like',
+  [
+    userValidator.isUserLoggedIn,
+    freetValidator.isFreetExists,
+    freetValidator.isLikedFreet,
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freet = await FreetCollection.removeOneLike(req.params.freetId, userId);
+    res.status(200).json({
+      message: 'The freet was unliked successfully.',
+      freet: util.constructFreetResponse(freet)
+    });
+  }
+);
+
+/**
+ * Refreet a freet.
+ *
+ * @name POST /api/freets/:id/refreet
+ *
+ * @return {FreetResponse} - the updated freet
+ * @throws {403} - if the user is not logged in
+ * @throws {404} - If the freetId is not valid
+ */
+ router.post(
+  '/:freetId?/refreet',
+  [
+    userValidator.isUserLoggedIn,
+    freetValidator.isFreetExists,
+    freetValidator.isUnreFreetedFreet
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freet = await FreetCollection.addOneReFreet(req.params.freetId, userId);
+    res.status(200).json({
+      message: 'The freet was refreeted successfully.',
+      freet: util.constructFreetResponse(freet)
+    });
+  }
+);
+
+/**
+ * Unrefreet a freet.
+ *
+ * @name DELETE /api/freets/:id/refreet
+ *
+ * @return {FreetResponse} - the updated freet
+ * @throws {403} - if the user is not logged in
+ * @throws {404} - If the freetId is not valid
+ */
+ router.delete(
+  '/:freetId?/refreet',
+  [
+    userValidator.isUserLoggedIn,
+    freetValidator.isFreetExists,
+    freetValidator.isReFreetedFreet
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freet = await FreetCollection.removeOneReFreet(req.params.freetId, userId);
+    res.status(200).json({
+      message: 'The freet was unrefreeted successfully.',
+      freet: util.constructFreetResponse(freet)
+    });
+  }
+);
+
+/**
+ * Personal downvote a freet.
+ *
+ * @name POST /api/freets/:id/downvote
+ *
+ * @return {FreetResponse} - the updated freet
+ * @throws {403} - if the user is not logged in
+ * @throws {404} - If the freetId is not valid
+ */
+ router.post(
+  '/:freetId?/downvote',
+  [
+    userValidator.isUserLoggedIn,
+    freetValidator.isFreetExists,
+    freetValidator.isUndownvotedFreet
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freet = await FreetCollection.addOneDownvote(req.params.freetId, userId);
+    res.status(200).json({
+      message: 'The freet was downvoted successfully.',
+      freet: util.constructFreetResponse(freet)
+    });
+  }
+);
+
+/**
+ * Personal downvote a freet.
+ *
+ * @name DELETE /api/freets/:id/downvote
+ *
+ * @return {FreetResponse} - the updated freet
+ * @throws {403} - if the user is not logged in
+ * @throws {404} - If the freetId is not valid
+ */
+ router.delete(
+  '/:freetId?/downvote',
+  [
+    userValidator.isUserLoggedIn,
+    freetValidator.isFreetExists,
+    freetValidator.isDownvotedFreet
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freet = await FreetCollection.removeOneDownvote(req.params.freetId, userId);
+    res.status(200).json({
+      message: 'The freet was undownvoted successfully.',
+      freet: util.constructFreetResponse(freet)
+    });
+  }
+);
+
 export {router as freetRouter};

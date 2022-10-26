@@ -40,3 +40,39 @@ function deleteFreet(fields) {
     .then(showResponse)
     .catch(showResponse);
 }
+
+function likeFreet(fields) {
+  fetch(`/api/freets/${fields.id}/like`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function reFreetFreet(fields) {
+  fetch(`/api/freets/${fields.id}/refreet`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function downvoteFreet(fields) {
+  fetch(`/api/freets/${fields.id}/downvote`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function unlikeFreet(fields) {
+  fetch(`/api/freets/${fields.id}/like`, {method: 'DELETE'})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function unreFreetFreet(fields) {
+  fetch(`/api/freets/${fields.id}/refreet`, {method: 'DELETE'})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function undownvoteFreet(fields) {
+  fetch(`/api/freets/${fields.id}/downvote`, {method: 'DELETE'})
+    .then(showResponse)
+    .catch(showResponse);
+}
