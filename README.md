@@ -427,30 +427,80 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - An array of all freets created that include media (photo, video, etc.)
 
-#### `POST /api/pdownvote/:freetId?` - Personal downvote freet
+#### `POST /api/freets/:freetId?/like` - Like freet
 
 **Returns**
 
 - A success message
-- An object with the updated downvote stats for the user
+- An object with the updated like stats for the user
 
 **Throws**
 
 - `403` if the user is not logged in
 - `404` if the freetId is invalid
-- `404` if the freet is private to user
+- `409` if freet has already been liked
+
+#### `DELETE /api/freets/:freetId?/like` - Unlike freet
+
+**Returns**
+
+- A success message
+- An object with the updated like stats for the user
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+- `409` if freet has not already been liked
+
+#### `POST /api/freets/:freetId?/refreet` - Refreet freet
+
+**Returns**
+
+- A success message
+- An object with the updated refreet stats for the freet
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
 - `409` if freet has already been personally downvoted
 
-#### `DELETE /api/pdownvote/:freetId?` - Personal downvote freet
+#### `DELETE /api/freets/:freetId?/refreet` - Unrefreet freet
 
 **Returns**
 
 - A success message
-- An object with the updated downvote stats for the user
+- An object with the updated refreet stats for the freet
 
 **Throws**
 
 - `403` if the user is not logged in
 - `404` if the freetId is invalid
-- `404` if the freet is private to user
+- `409` if freet has not already been refreeted
+
+#### `POST /api/freets/:freetId?/pdownvote` - Personal downvote freet
+
+**Returns**
+
+- A success message
+- An object with the updated downvote stats for the freet
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
+- `409` if freet has already been personally downvoted
+
+#### `DELETE /api/freets/:freetId?/pdownvote` - Personal undownvote freet
+
+**Returns**
+
+- A success message
+- An object with the updated downvote stats for the freet
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the freetId is invalid
 - `409` if freet has not already been personally downvoted
