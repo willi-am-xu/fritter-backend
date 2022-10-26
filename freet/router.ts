@@ -4,6 +4,7 @@ import FreetCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';
+import moment from 'moment';
 
 const router = express.Router();
 
@@ -29,13 +30,30 @@ router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
+    if (req.query.author !== undefined && !req.query.media && !req.query.startdate && !req.query.enddate) {
       next();
       return;
     }
 
     const allFreets = await FreetCollection.findAll();
-    const response = allFreets.map(util.constructFreetResponse);
+    let filteredFreets = allFreets;
+    if (req.query.media) {
+      filteredFreets = filteredFreets.filter((freet) => {
+        if (freet.media) {
+          return freet.media === req.query.media;
+        }
+        else {
+          return req.query.media === 'textonly';
+        }
+      });
+    }
+    if (req.query.startdate) {
+      filteredFreets = filteredFreets.filter((freet) => freet.dateCreated >= moment(req.query.startdate.toString(), 'MMMM Do YYYY, h:mm:ss a').toDate());
+    }
+    if (req.query.enddate) {
+      filteredFreets = filteredFreets.filter((freet) => freet.dateCreated <= moment(req.query.enddate.toString(), 'MMMM Do YYYY, h:mm:ss a').toDate());
+    }
+    const response = filteredFreets.map(util.constructFreetResponse);
     res.status(200).json(response);
   },
   [
@@ -43,7 +61,25 @@ router.get(
   ],
   async (req: Request, res: Response) => {
     const authorFreets = await FreetCollection.findAllByUsername(req.query.author as string);
-    const response = authorFreets.map(util.constructFreetResponse);
+    let filteredFreets = authorFreets;
+    if (req.query.media) {
+      filteredFreets = filteredFreets.filter((freet) => {
+        if (freet.media) {
+          return freet.media === req.query.media;
+        }
+        else {
+          return req.query.media === 'textonly';
+        }
+      });
+    }
+    if (req.query.startdate) {
+      console.log(req.query.startdate.toString());
+      filteredFreets = filteredFreets.filter((freet) => freet.dateCreated >= new Date(req.query.startdate.toString()));
+    }
+    if (req.query.enddate) {
+      filteredFreets = filteredFreets.filter((freet) => freet.dateCreated <= new Date(req.query.enddate.toString()));
+    }
+    const response = filteredFreets.map(util.constructFreetResponse);
     res.status(200).json(response);
   }
 );

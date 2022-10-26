@@ -9,6 +9,7 @@ type FreetResponse = {
   dateCreated: string;
   content: string;
   dateModified: string;
+  media?: string;
 };
 
 /**
@@ -18,6 +19,8 @@ type FreetResponse = {
  * @returns {string} - formatted date as string
  */
 const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
+
+const stringToDate = (str: string): Date => moment(str, 'MMMM Do YYYY, h:mm:ss a').toDate();
 
 /**
  * Transform a raw Freet object from the database into an object
@@ -44,5 +47,6 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
 };
 
 export {
+  stringToDate,
   constructFreetResponse
 };
