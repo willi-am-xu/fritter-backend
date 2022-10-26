@@ -44,7 +44,12 @@ const formsAndHandlers = {
   'delete-freet': deleteFreet,
   'follow-user': followUser,
   'unfollow-user': unfollowUser,
-  'get-user-profile': getUserProfile
+  'get-user-profile': getUserProfile,
+  'view-bundles': viewBundlesByAuthor,
+  'create-bundle': addBundle,
+  'delete-bundle': deleteBundle,
+  'add-bundle': addFreetToBundle,
+  'remove-bundle': removeFreetFromBundle
 };
 
 // Attach handlers to forms
